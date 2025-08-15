@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do Web App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    .todo-app {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ffc8;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="datetime-local"] {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #00ffc8;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #00cfa2;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: rgba(255, 255, 255, 0.07);
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .done {
+      text-decoration: line-through;
+      color: #ccc;
+    }
+
+    .task-controls button {
+      margin-left: 5px;
+      background: transparent;
+      color: #fff;
+      border: 1px solid #00ffc8;
+      padding: 5px 8px;
+      border-radius: 6px;
+    }
+
+    .task-controls button:hover {
+      background-color: #00ffc8;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+<div class="todo-app">
+  <h1>📝 My To-Do List</h1>
+  <div class="input-group">
+    <input type="text" id="taskInput" placeholder="Enter your task">
+    <input type="datetime-local" id="dateTimeInput">
+    <button onclick="addTask()">Add Task</button>
+  </div>
+  <ul id="taskList"></ul>
+</div>
+
+<script>
+  const taskInput = document.getElementById('taskInput');
+  const dateTimeInput = document.getElementById('dateTimeInput');
+  const taskList = document.getElementById('taskList');
+
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+  function renderTasks() {
+    taskList.innerHTML = '';
+    tasks.forEach((task, index) => {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.innerHTML = task.completed ? `<span class="done">${task.text} — ${task.dateTime}</span>` : `${task.text} — ${task.dateTime}`;
+      
+      const controls = document.createElement('div');
+      controls.className = 'task-controls';
+
+      const completeBtn = document.createElement('button');
+      completeBtn.textContent = '✓';
+      completeBtn.onclick = () => {
+        tasks[index].completed = !tasks[index].completed;
+        saveTasks();
+      };
+
+      const editBtn = document.createElement('button');
+      editBtn.textContent = '✎';
+      editBtn.onclick = () => {
+        const newTask = prompt("Edit task:", task.text);
+        if (newTask !== null && newTask.trim() !== '') {
+          tasks[index].text = newTask;
+          saveTasks();
+        }
+      };
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '🗑';
+      deleteBtn.onclick = () => {
+        tasks.splice(index, 1);
+        saveTasks();
+      };
+
+      controls.append(completeBtn, editBtn, deleteBtn);
+      li.append(span, controls);
+      taskList.appendChild(li);
+    });
+  }
+
+  function addTask() {
+    const text = taskInput.value.trim();
+    const dateTime = dateTimeInput.value;
+
+    if (!text) return alert("Please enter a task!");
+
+    tasks.push({ text, dateTime, completed: false });
+    saveTasks();
+    taskInput.value = '';
+    dateTimeInput.value = '';
+  }
+
+  function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    renderTasks();
+  }
+
+  renderTasks();
+</script>
+
+</body>
+</html>
