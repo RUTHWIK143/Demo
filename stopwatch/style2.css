@@ -1,0 +1,53 @@
+body {
+  background: #222;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+}
+
+.display {
+  font-size: 3rem;
+  margin: 20px 0;
+}
+
+.buttons button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #555;
+  color: white;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.buttons button:hover {
+  background: #777;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  text-align: left;
+}
+
+ul li {
+  background: #444;
+  padding: 5px 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
